@@ -1,0 +1,17 @@
+﻿version: '3.8'
+
+services:
+  mtogo.auth:
+    container_name: mtogo-courier
+    image: mtogo.courier
+    build:
+      context: .
+      dockerfile: src/Courier.Web/Dockerfile
+    ports:
+      - "8084:80"
+    networks:
+      - kafka
+
+networks:
+  kafka:
+    external: true
