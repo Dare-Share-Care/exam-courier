@@ -9,9 +9,9 @@ public class ClaimDelivery : IDisposable
     private readonly IProducer<string, string> _producer;
     
     //docker
-    //private const string BootstrapServers = "kafka:9093";
+    private const string BootstrapServers = "kafka:9093";
     //localhost
-    private const string BootstrapServers = "localhost:9092";
+    //private const string BootstrapServers = "localhost:9092";
     
     
     public ClaimDelivery()
