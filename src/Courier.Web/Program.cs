@@ -1,7 +1,8 @@
 using System.Text;
 using Courier.Web.Data;
-using Courier.Web.Interfaces.DomanServices;
+using Courier.Web.Interfaces.DomainServices;
 using Courier.Web.Interfaces.Repositories;
+using Courier.Web.Producer;
 using Courier.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,6 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });
 });
-
 
 //DBContext
 builder.Services.AddDbContext<CourierContext>(options =>
@@ -60,6 +60,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireCourierRole", policy => policy.RequireRole("Courier"));
     // Add more policies for other roles as needed
 });
+
+//Kafka Producer
+builder.Services.AddSingleton<ClaimDelivery>();
 
 var app = builder.Build();
 app.UseStaticFiles();

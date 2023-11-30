@@ -4,6 +4,7 @@ using Courier.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Courier.Web.Migrations
 {
     [DbContext(typeof(CourierContext))]
-    partial class CourierContextModelSnapshot : ModelSnapshot
+    [Migration("20231130184049_fixed")]
+    partial class @fixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,7 @@ namespace Courier.Web.Migrations
                             DeliveryAddress = "Janusevej 90, 2300 København S",
                             DeliveryStatus = 0,
                             OrderId = 1L,
-                            TimeClaimed = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9585)
+                            TimeClaimed = new DateTime(2023, 11, 30, 19, 40, 49, 736, DateTimeKind.Local).AddTicks(6615)
                         },
                         new
                         {
@@ -70,7 +73,7 @@ namespace Courier.Web.Migrations
                             DeliveryAddress = "Frederiksgade 9, 8000 Helsingør C",
                             DeliveryStatus = 0,
                             OrderId = 2L,
-                            TimeClaimed = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9642)
+                            TimeClaimed = new DateTime(2023, 11, 30, 19, 40, 49, 736, DateTimeKind.Local).AddTicks(6666)
                         },
                         new
                         {
@@ -79,8 +82,8 @@ namespace Courier.Web.Migrations
                             DeliveryAddress = "Julisvej 9, 2300 København S",
                             DeliveryStatus = 1,
                             OrderId = 3L,
-                            TimeClaimed = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9645),
-                            TimeDelivered = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9647)
+                            TimeClaimed = new DateTime(2023, 11, 30, 19, 40, 49, 736, DateTimeKind.Local).AddTicks(6669),
+                            TimeDelivered = new DateTime(2023, 11, 30, 19, 40, 49, 736, DateTimeKind.Local).AddTicks(6671)
                         });
                 });
 #pragma warning restore 612, 618

@@ -4,6 +4,7 @@ using Courier.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Courier.Web.Migrations
 {
     [DbContext(typeof(CourierContext))]
-    partial class CourierContextModelSnapshot : ModelSnapshot
+    [Migration("20231130165800_timeclaimed")]
+    partial class timeclaimed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace Courier.Web.Migrations
                     b.Property<long>("OrderId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("TimeClaimed")
+                    b.Property<DateTime>("TimeClaimed")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TimeDelivered")
@@ -58,29 +61,29 @@ namespace Courier.Web.Migrations
                         {
                             Id = 1L,
                             CourierId = 1L,
-                            DeliveryAddress = "Janusevej 90, 2300 København S",
+                            DeliveryAddress = "Some address",
                             DeliveryStatus = 0,
                             OrderId = 1L,
-                            TimeClaimed = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9585)
+                            TimeClaimed = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2L,
                             CourierId = 2L,
-                            DeliveryAddress = "Frederiksgade 9, 8000 Helsingør C",
+                            DeliveryAddress = "Some address",
                             DeliveryStatus = 0,
                             OrderId = 2L,
-                            TimeClaimed = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9642)
+                            TimeClaimed = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3L,
                             CourierId = 3L,
-                            DeliveryAddress = "Julisvej 9, 2300 København S",
+                            DeliveryAddress = "Some address",
                             DeliveryStatus = 1,
                             OrderId = 3L,
-                            TimeClaimed = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9645),
-                            TimeDelivered = new DateTime(2023, 11, 30, 19, 49, 21, 649, DateTimeKind.Local).AddTicks(9647)
+                            TimeClaimed = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TimeDelivered = new DateTime(2023, 11, 30, 17, 58, 0, 471, DateTimeKind.Local).AddTicks(285)
                         });
                 });
 #pragma warning restore 612, 618
