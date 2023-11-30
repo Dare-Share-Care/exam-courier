@@ -1,3 +1,4 @@
+using Courier.Web.Entities;
 using Courier.Web.Interfaces.Repositories;
 
 namespace Courier.Web.Data;
