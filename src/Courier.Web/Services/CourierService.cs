@@ -2,6 +2,7 @@ using Courier.Web.Entities;
 using Courier.Web.Interfaces.DomainServices;
 using Courier.Web.Interfaces.Repositories;
 using Courier.Web.Models;
+using Courier.Web.Models.Dto;
 using Courier.Web.Producer;
 using Courier.Web.Specifications;
 
@@ -11,33 +12,55 @@ public class CourierService : ICourierService
 {
     private readonly IReadRepository<Delivery> _deliveryReadRepository;
     private readonly IRepository<Delivery> _deliveryRepository;
-    private readonly ClaimDelivery _claimDelivery;
+    private readonly KafkaProducer _kafkaProducer;
+    private readonly IGeocodingService _geocodingService;
     
-    public CourierService(IReadRepository<Delivery> deliveryReadRepository, IRepository<Delivery> deliveryRepository, ClaimDelivery claimDelivery)
+    public CourierService(IReadRepository<Delivery> deliveryReadRepository, IRepository<Delivery> deliveryRepository, KafkaProducer kafkaProducer, IGeocodingService geocodingService)
     {
         _deliveryReadRepository = deliveryReadRepository;
         _deliveryRepository = deliveryRepository;
-        _claimDelivery = claimDelivery;
+        _kafkaProducer = kafkaProducer;
+        _geocodingService = geocodingService;
+    }
+    
+    public async Task<Delivery> MarkOrderDelivered(long orderId)
+    {
+        var delivery = await _deliveryReadRepository.GetByIdAsync(new OrderDeliveriesSpecification(orderId));
+        if (delivery == null) return null;
+        
+        ClaimOrderDto claimOrderDto = new()
+        {
+            OrderId = orderId
+        };
+        
+        delivery.DeliveryStatus = DeliveryStatus.Delivered;
+        delivery.TimeDelivered = DateTime.UtcNow;
+        
+        await _deliveryRepository.UpdateAsync(delivery);
+        
+        await _kafkaProducer.ProduceAsync("mtogo-completed-deliveries", claimOrderDto);
+        
+        return delivery;
     }
     
     public async Task<Delivery> ClaimOrder(long orderId, long courierId, string deliveryAddress)
     {
+        var coordinates = await _geocodingService.GetCoordinatesFromAddress(deliveryAddress);
         var delivery = new Delivery
         {
             OrderId = orderId,
             CourierId = courierId,
             DeliveryAddress = deliveryAddress,
             DeliveryStatus = DeliveryStatus.Claimed,
-            TimeClaimed = DateTime.UtcNow
+            TimeClaimed = DateTime.UtcNow,
+            Latitude = coordinates?.Latitude,
+            Longitude = coordinates?.Longitude
         };
-
         await _deliveryRepository.AddAsync(delivery);
-
-        // Produce a message to Kafka
-        await _claimDelivery.ProduceAsync("mtogo-claimed-deliveries", delivery);
-
+        await _kafkaProducer.ProduceAsync("mtogo-claimed-deliveries", new ClaimOrderDto { OrderId = orderId });
         return delivery;
     }
+
     
     // TODO: Review below implementation of methods. 
     

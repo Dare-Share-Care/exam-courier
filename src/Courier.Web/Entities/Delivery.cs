@@ -10,4 +10,8 @@ public class Delivery : BaseEntity
     public DeliveryStatus DeliveryStatus { get; set; }
     public DateTime? TimeClaimed { get; set; }
     public DateTime? TimeDelivered { get; set; }
+    
+    // Properties for geocoding
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
 }

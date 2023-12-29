@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+
 const string policyName = "AllowOrigin";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -22,21 +24,32 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder
+                .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
 });
 
-//DBContext
+// Register IHttpClientFactory
+builder.Services.AddHttpClient();
+
+// DBContext
 builder.Services.AddDbContext<CourierContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbContext"));
 });
 
-//Build services
+// Build services
 builder.Services.AddScoped<ICourierService, CourierService>();
 
-//Build repositories
+// Register GeocodingService
+builder.Services.AddSingleton<IGeocodingService>(provider => {
+    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient();
+    return new GeocodingService("pk.fe397984a9406a068bd52eb413d8d784", httpClient);
+});
+
+// Build repositories
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
@@ -54,26 +67,36 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
-                        
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireCourierRole", policy => policy.RequireRole("Courier"));
     // Add more policies for other roles as needed
 });
 
-//Kafka Producer
-builder.Services.AddSingleton<ClaimDelivery>();
+// Kafka Producer
+builder.Services.AddSingleton<KafkaProducer>();
 
 var app = builder.Build();
+
 app.UseStaticFiles();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors(policyName);
+
 app.UseAuthentication();
+
+app.UseRouting();
+
 app.UseAuthorization();
 
+app.UseHttpsRedirection();
+
 app.MapControllers();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
