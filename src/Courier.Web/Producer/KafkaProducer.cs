@@ -3,18 +3,18 @@ using Confluent.Kafka;
 
 namespace Courier.Web.Producer;
 
-public class ClaimDelivery : IDisposable
+public class KafkaProducer : IDisposable
 {
     
     private readonly IProducer<string, string> _producer;
     
     //docker
-    private const string BootstrapServers = "kafka:9093";
+    //private const string BootstrapServers = "kafka:9093";
     //localhost
-    //private const string BootstrapServers = "localhost:9092";
+    private const string BootstrapServers = "localhost:9092";
     
     
-    public ClaimDelivery()
+    public KafkaProducer()
     {
         var config = new ProducerConfig { BootstrapServers = BootstrapServers };
         _producer = new ProducerBuilder<string, string>(config).Build();

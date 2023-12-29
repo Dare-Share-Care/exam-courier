@@ -22,6 +22,9 @@ public class CourierContext : DbContext
         modelBuilder.Entity<Delivery>().Property(d => d.TimeClaimed).IsRequired(false);
         modelBuilder.Entity<Delivery>().Property(d => d.TimeDelivered).IsRequired(false);
         
+        modelBuilder.Entity<Delivery>().Property(d => d.Latitude).IsRequired(false);
+        modelBuilder.Entity<Delivery>().Property(d => d.Longitude).IsRequired(false);
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Delivery>().HasData(
