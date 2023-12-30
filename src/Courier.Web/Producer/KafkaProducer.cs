@@ -11,7 +11,7 @@ public class KafkaProducer : IDisposable
     //docker
     //private const string BootstrapServers = "kafka:9093";
     //localhost
-    private const string BootstrapServers = "localhost:9092";
+    private const string BootstrapServers = "kafka:9093";
     
     
     public KafkaProducer()
